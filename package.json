@@ -1,0 +1,25 @@
+{
+  "name": "@faicon/api",
+  "version": "0.0.1",
+  "description": "API helper for react. https://github.com/faiconqg/api",
+  "main": "src/index.js",
+  "files": [
+    "src/"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/faiconqg/api.git"
+  },
+  "author": "faicon.com",
+  "license": "MIT",
+  "devDependencies": {
+    "babel-eslint": "^8.2.1",
+    "eslint": "^4.17.0",
+    "eslint-loader": "^1.9.0",
+    "eslint-plugin-react": "^7.6.1"
+  },
+  "peerDependencies": {
+    "react": ">=16.2.0",
+    "mobx-rest": ">=2.2.5"
+  }
+}
