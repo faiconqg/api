@@ -1,6 +1,6 @@
 {
   "name": "@faicon/api",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "API helper for react. https://github.com/faiconqg/api",
   "main": "src/index.js",
   "files": [
@@ -12,6 +12,10 @@
   },
   "author": "faicon.com",
   "license": "MIT",
+  "dependencies": {
+    "mobx-rest-fetch-adapter": ">=0.1.4",
+    "mobx-rest": ">=2.2.5"
+  },
   "devDependencies": {
     "babel-eslint": "^8.2.1",
     "eslint": "^4.17.0",
@@ -19,7 +23,6 @@
     "eslint-plugin-react": "^7.6.1"
   },
   "peerDependencies": {
-    "react": ">=16.2.0",
-    "mobx-rest": ">=2.2.5"
+    "react": ">=16.2.0"
   }
 }

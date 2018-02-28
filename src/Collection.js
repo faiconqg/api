@@ -1,5 +1,5 @@
-import { Collection } from 'mobx-rest'
+import { Collection as BaseCollection } from 'mobx-rest'
 
-export default class MyCollection extends Collection {
+export default class Collection extends BaseCollection {
   where = filterObject => this.fetch({ data: { filter: { where: filterObject } } })
 }
