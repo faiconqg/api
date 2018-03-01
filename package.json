@@ -1,6 +1,6 @@
 {
   "name": "@faicon/api",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "API helper for react. https://github.com/faiconqg/api",
   "main": "lib/api.js",
   "files": [
@@ -20,6 +20,7 @@
   "license": "MIT",
   "dependencies": {
     "mobx": ">=3.6.1",
+    "mobx-react": "^4.4.2",
     "mobx-rest": ">=2.2.5",
     "mobx-rest-fetch-adapter": ">=0.1.4"
   },
@@ -41,6 +42,7 @@
     "mocha": "^4.0.1",
     "moment": "^2.19.3",
     "react": "^16.2.0",
+    "react-dom": "^16.2.0",
     "webpack": "^3.10.0",
     "yargs": "^10.0.3"
   }
