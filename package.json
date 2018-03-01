@@ -1,11 +1,17 @@
 {
   "name": "@faicon/api",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "API helper for react. https://github.com/faiconqg/api",
-  "main": "src/index.js",
+  "main": "lib/api.js",
   "files": [
-    "src/"
+    "lib/"
   ],
+  "scripts": {
+    "build": "webpack --env dev && webpack --env build && npm run test",
+    "dev": "webpack --progress --colors --watch --env dev",
+    "test": "mocha --require babel-core/register --colors ./test/*.spec.js",
+    "test:watch": "mocha --require babel-core/register --colors -w ./test/*.spec.js"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/faiconqg/api.git"
@@ -13,16 +19,29 @@
   "author": "faicon.com",
   "license": "MIT",
   "dependencies": {
-    "mobx-rest-fetch-adapter": ">=0.1.4",
-    "mobx-rest": ">=2.2.5"
+    "mobx": ">=3.6.1",
+    "mobx-rest": ">=2.2.5",
+    "mobx-rest-fetch-adapter": ">=0.1.4"
   },
   "devDependencies": {
-    "babel-eslint": "^8.2.1",
-    "eslint": "^4.17.0",
+    "babel-core": "^6.26.0",
+    "babel-eslint": "^8.0.3",
+    "babel-loader": "^7.1.2",
+    "babel-plugin-add-module-exports": "^0.2.1",
+    "babel-plugin-transform-object-assign": "^6.22.0",
+    "babel-plugin-transform-object-rest-spread": "^6.26.0",
+    "babel-preset-env": "^1.6.1",
+    "babel-preset-react": "^6.24.1",
+    "babel-preset-stage-2": "^6.24.1",
+    "chai": "^4.1.2",
+    "commitplease": "latest",
+    "eslint": "^4.12.1",
     "eslint-loader": "^1.9.0",
-    "eslint-plugin-react": "^7.6.1"
-  },
-  "peerDependencies": {
-    "react": ">=16.2.0"
+    "eslint-plugin-react": "^7.5.1",
+    "mocha": "^4.0.1",
+    "moment": "^2.19.3",
+    "react": "^16.2.0",
+    "webpack": "^3.10.0",
+    "yargs": "^10.0.3"
   }
 }
