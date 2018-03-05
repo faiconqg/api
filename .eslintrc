@@ -3,12 +3,19 @@
 
   "parser": "babel-eslint",
 
-  "env": { "node": true },
+  "parserOptions": {
+		"ecmaVersion": 6
+	},
+
+  "env": { "browser": true, "node": true },
 
   "rules": {
     "quotes": ["error", "single"],
     "semi": [2, "never"],
-    "no-unused-vars": [2, { "vars": "all", "args": "all", "varsIgnorePattern": "React" }],
+    "no-unused-vars": [
+      2,
+      { "vars": "all", "args": "all", "varsIgnorePattern": "React" }
+    ],
     "no-console": 0,
     "react/display-name": 0,
     "react/prop-types": [2, { "ignore": "navigation" }]
