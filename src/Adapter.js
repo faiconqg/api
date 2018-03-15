@@ -69,7 +69,7 @@ function ajax (url: string, options: Options): OptionsRequest {
   const promise = new Promise((resolve, reject) => {
     rejectPromise = reject
     xhr.then(checkStatus).then(resolve, error => {
-      const ret = error && (error.error || error.errors || {})
+      const ret = error && (error.error || error.errors || error)
 
       return reject(ret || {})
     })
