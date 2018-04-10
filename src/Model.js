@@ -14,6 +14,8 @@ export default class Model extends BaseModel {
   }
 
   one = () => this.fetch(this._query)
-  
+
   busy = () => !!this.request
+
+  g = key => this.get(key)
 }
