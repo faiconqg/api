@@ -1,6 +1,6 @@
 {
   "name": "@faicon/api",
-  "version": "0.0.10",
+  "version": "0.0.11",
   "description": "API helper for react. https://github.com/faiconqg/api",
   "main": "lib/api.js",
   "files": [
