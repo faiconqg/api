@@ -2,15 +2,21 @@ import React from 'react'
 import { apiClient } from 'mobx-rest'
 import adapter from './Adapter'
 
-export default (apiPath, token, headers) => {
+export default (apiPath, token = null, headers = null, tokenKey = 'Authorization') => {
+  let headersObj = {'Content-Type': 'application/json'}
+
+  if (headers) {
+    headersObj = Object.assign(headersObj, headers)
+  }
+
+  if (token) {
+    headersObj[tokenKey] = token
+  }
+
   apiClient(adapter, {
     apiPath,
-    // commonOptions: { headers: { 'X-Access-Token': token } }
     commonOptions: {
-      headers: Object.assign({
-        'Content-Type': 'application/json',
-        Authorization: 'Bearer ' + token
-      }, headers)
+      headers: headersObj
     }
   })
 }
