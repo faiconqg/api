@@ -22,5 +22,5 @@ export default class Collection extends BaseCollection {
 
   all = () => this.fetch(this._query)
 
-  busy = () => this.request || this._forceBusy
+  busy = () => !!this.request || this._forceBusy
 }
