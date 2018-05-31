@@ -4,8 +4,13 @@ import { apiClient } from 'mobx-rest'
 import axios from 'axios'
 const createAdapter: any = require('mobx-rest-axios-adapter').default
 
-export default (apiPath, token = null, headers = null, tokenKey = 'Authorization') => {
-  let headersObj = {'Content-Type': 'application/json'}
+export default (
+  apiPath,
+  token = null,
+  headers = null,
+  tokenKey = 'Authorization'
+) => {
+  let headersObj = { 'Content-Type': 'application/json' }
 
   if (headers) {
     headersObj = Object.assign(headersObj, headers)
