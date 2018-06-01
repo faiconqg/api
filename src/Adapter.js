@@ -1,131 +1,126 @@
-/* global fetch, Headers */
 // @flow
+import { AxiosInstance } from 'axios'
+import { forEach, isNull, merge } from 'lodash'
 import qs from 'qs'
-import merge from 'lodash.merge'
-import ponyfill from 'fetch-ponyfill'
-const Promise = require('es6-promise').Promise
 
-type OptionsRequest = {
+type Request = {
   abort: () => void,
   promise: Promise<*>
 }
 
 type Method = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE'
+
 type Options = {
   method: Method,
   headers?: ?{ [key: string]: string },
-  onProgress?: (num: number) => mixed,
-  data?: ?{ [key: string]: mixed }
+  data?: ?{ [key: string]: mixed },
+  qs?: any
 }
 
-export function ajaxOptions(options: Options): any {
-  let HeadersConstructor = Headers
-  const { headers, data, ...otherOptions } = options
-
-  if (typeof HeadersConstructor === 'undefined') {
-    HeadersConstructor = ponyfill().Headers
+function ajaxOptions(url: string, options: Options): ?{} {
+  const baseOptions: Object = {
+    url,
+    method: options.method,
+    responseType: 'json'
   }
 
-  const baseHeaders = {}
-  if (data) {
-    baseHeaders['Content-Type'] = 'application/json'
-  }
-
-  const headersObject = new HeadersConstructor(
-    Object.assign(baseHeaders, headers)
-  )
-
-  return {
-    ...otherOptions,
-    headers: headersObject,
-    body: data ? JSON.stringify(data) : null
-  }
-}
-
-export function checkStatus(response: any): any {
-  return response.text().then(text => {
-    let json = {}
-    if (text) {
-      try {
-        json = JSON.parse(text)
-      } catch (e) {
-        console.log('Parse JSON fail')
-      }
-    }
-    return response.ok ? json : Promise.reject(json)
-  })
-}
-
-export function checkDownload(response: any): any {
-  return response.blob().then(blob => {
-    return response.ok ? blob : Promise.reject(blob)
-  })
-}
-
-function ajax(url: string, options: Options): OptionsRequest {
-  let fetchMethod = fetch
-  let rejectPromise
+  if (options.headers) baseOptions.headers = options.headers
 
   if (options.method === 'GET' && options.data) {
-    url = `${url}?${qs.stringify(options.data)}`
-    delete options.data
+    url = `${url}?${qs.stringify(options.data, options.qs)}`
+
+    return Object.assign({}, baseOptions, { url })
   }
 
-  if (typeof fetchMethod === 'undefined') {
-    fetchMethod = ponyfill().fetch
+  const formData = new FormData()
+  let hasFile = false
+
+  forEach(options.data, (val: any, attr: string) => {
+    hasFile = hasFile || val instanceof File || val instanceof Blob
+
+    if (!isNull(val)) formData.append(attr, val)
+  })
+
+  if (hasFile) {
+    return Object.assign({}, baseOptions, {
+      cache: false,
+      processData: false,
+      data: formData
+    })
   }
 
-  let resolveMethod
-  if (options.raw) {
-    resolveMethod = checkDownload
-  } else {
-    resolveMethod = checkStatus
-  }
+  return Object.assign({}, baseOptions, { data: options.data })
+}
 
-  const xhr = fetchMethod(url, ajaxOptions(options))
-  const promise = new Promise((resolve, reject) => {
-    rejectPromise = reject
-    xhr.then(resolveMethod).then(resolve, error => {
-      const ret = error && (error.error || error.errors || error)
+function ajax(url: string, options: Options, axiosInstance): Request {
+  const { CancelToken } = axiosInstance
+  let cancel
 
-      return reject(ret || {})
+  const xhr = axiosInstance(ajaxOptions(url, options), {
+    cancelToken: new CancelToken(c => {
+      cancel = c
     })
   })
 
-  const abort = () => rejectPromise('abort')
+  const promise = new Promise((resolve, reject) => {
+    xhr.then(
+      response => {
+        return resolve(response.data)
+      },
+      error => {
+        return reject(error.response.data)
+      }
+    )
+  })
+
+  const abort = () => {
+    cancel()
+  }
 
   return { abort, promise }
 }
 
-export default {
+export default (axiosInstance: AxiosInstance) => ({
   apiPath: '',
   commonOptions: {},
 
-  get(path: string, data: ?{}, options?: {} = {}): OptionsRequest {
+  get(path: string, data: ?{}, options?: {} = {}): Request {
     return ajax(
       `${this.apiPath}${path}`,
-      merge({}, { method: 'GET' }, this.commonOptions, options, { data })
+      merge({}, { method: 'GET', data }, this.commonOptions, options),
+      axiosInstance
     )
   },
 
-  post(path: string, data: ?{}, options?: {} = {}): OptionsRequest {
+  post(path: string, data: ?{}, options?: {} = {}): Request {
     return ajax(
       `${this.apiPath}${path}`,
-      merge({}, { method: 'POST' }, this.commonOptions, options, { data })
+      merge({}, { method: 'POST', data }, this.commonOptions, options),
+      axiosInstance
     )
   },
 
-  put(path: string, data: ?{}, options?: {} = {}): OptionsRequest {
+  put(path: string, data: ?{}, options?: {} = {}): Request {
     return ajax(
       `${this.apiPath}${path}`,
-      merge({}, { method: 'PUT' }, this.commonOptions, options, { data })
+      merge({}, { method: 'PUT', data }, this.commonOptions, options),
+      axiosInstance
     )
   },
 
-  del(path: string, options?: {} = {}): OptionsRequest {
+  patch(path: string, data: ?{}, options?: {} = {}): Request {
     return ajax(
       `${this.apiPath}${path}`,
-      merge({}, { method: 'DELETE' }, this.commonOptions, options)
+      merge({}, { method: 'PATCH', data }, this.commonOptions, options),
+      axiosInstance
+    )
+  },
+
+  del(path: string, options?: {} = {}): Request {
+    return ajax(
+      `${this.apiPath}${path}`,
+      merge({}, { method: 'DELETE' }, this.commonOptions, options),
+      axiosInstance
     )
   }
-}
+})

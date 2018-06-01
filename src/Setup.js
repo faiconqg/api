@@ -2,7 +2,7 @@ import React from 'react'
 import { apiClient } from 'mobx-rest'
 // import adapter from './Adapter'
 import axios from 'axios'
-const createAdapter: any = require('mobx-rest-axios-adapter').default
+import createAdapter from './Adapter'
 
 export default (
   apiPath,
