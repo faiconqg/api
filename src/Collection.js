@@ -15,7 +15,6 @@ export default class Collection extends BaseCollection {
   }
 
   custom = (method, body, forceBusy = false) => {
-    console.log(this._forceBusy)
     this._forceBusy = forceBusy
     return this.rpc(method, body)
   }
